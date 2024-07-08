@@ -11,6 +11,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@line/liff": "^2.23.2",
     "focus-trap-react": "^10.2.3",
     "framer-motion": "^11.2.13",
     "lucide-react": "^0.401.0",

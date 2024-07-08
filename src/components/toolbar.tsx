@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { SendHorizonal } from "lucide-react";
@@ -14,18 +14,26 @@ import {
 import { useSendConfirmModal } from "./send-confirm-modal";
 
 interface ToolbarProps {
-  onSend?(): void | Promise<void>;
+  onSend?(previewUrl: string): void | Promise<void>;
+}
+
+function Tool({ id }: { id: string }) {
+  const tools = useTools();
+  const isSelected = useIsToolSelected(tools[id]);
+
+  return <TldrawUiMenuItem {...tools[id]} isSelected={isSelected} />;
 }
 
 export function Toolbar({ onSend }: ToolbarProps) {
   const editor = useEditor();
-  const tools = useTools();
-  const isDrawing = useIsToolSelected(tools.draw);
-  const isErasing = useIsToolSelected(tools.eraser);
   const { SendConfirmModal, setShowSendConfirmModal } = useSendConfirmModal();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const [isSending, setIsSending] = useState(false);
+
+  useEffect(() => {
+    editor.setCurrentTool("draw");
+  }, [editor]);
 
   const handleshowSendConfirm = async () => {
     setIsSending(true);
@@ -51,7 +59,7 @@ export function Toolbar({ onSend }: ToolbarProps) {
   };
 
   const handleSend = async () => {
-    await onSend();
+    await onSend?.(previewUrl || "");
 
     setIsSending(false);
     setShowSendConfirmModal(false);
@@ -68,14 +76,16 @@ export function Toolbar({ onSend }: ToolbarProps) {
           exit={{ y: 20, opacity: 0 }}
         >
           <DefaultToolbar>
-            <TldrawUiMenuItem {...tools.draw} isSelected={isDrawing} />
-            <TldrawUiMenuItem {...tools.eraser} isSelected={isErasing} />
+            {/* <Tool id="select" /> */}
+            {/* <Tool id="hand" /> */}
+            <Tool id="draw" />
+            <Tool id="eraser" />
             <button
               className="tlui-button tlui-button__tool"
               onClick={handleshowSendConfirm}
               title="送出"
             >
-              <SendHorizonal className="w-4 h-4 text-[#4F4F4F]" />
+              <SendHorizonal className="w-4 h-4 text-[#06c755]" />
             </button>
           </DefaultToolbar>
         </motion.div>
