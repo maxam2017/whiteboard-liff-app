@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { SendHorizonal } from "lucide-react";
+import { Redo2, SendHorizonal, Undo2 } from "lucide-react";
 import {
   DefaultToolbar,
   TldrawUiMenuItem,
@@ -78,8 +78,23 @@ export function Toolbar({ onSend }: ToolbarProps) {
           <DefaultToolbar>
             {/* <Tool id="select" /> */}
             {/* <Tool id="hand" /> */}
+            <button
+              className="tlui-button tlui-button__tool"
+              onClick={() => editor.undo()}
+              title="回到上一步"
+            >
+              <Undo2 className="w-4 h-4" />
+            </button>
+            <button
+              className="tlui-button tlui-button__tool"
+              onClick={() => editor.redo()}
+              title="重做"
+            >
+              <Redo2 className="w-4 h-4" />
+            </button>
             <Tool id="draw" />
             <Tool id="eraser" />
+            <div className="border-r border-gray-300 h-6 mx-2" />
             <button
               className="tlui-button tlui-button__tool"
               onClick={handleshowSendConfirm}
